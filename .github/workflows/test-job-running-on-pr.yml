@@ -1,0 +1,20 @@
+name: Test PR Workflow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - trigger-pr-jobs
+
+  pull_request:
+    branches: [main]
+    paths:
+      - trigger-pr-jobs
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Testing testing"
+
+
