@@ -4,12 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - trigger-pr-jobs
+      - trigger-pr-jobs/**
 
   pull_request:
     branches: [main]
     paths:
-      - trigger-pr-jobs
+      - trigger-pr-jobs/**
 
 jobs:
   test:
