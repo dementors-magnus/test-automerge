@@ -15,6 +15,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Testing testing"
+      - run: |
+        echo "Testing"
+        sleep 10
+        echo "Testing done"
+
 
 
