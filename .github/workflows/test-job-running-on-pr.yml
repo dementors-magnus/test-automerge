@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-        echo "Testing"
-        sleep 10
-        echo "Testing done"
+          echo "Testing"
+          sleep 10
+          echo "Testing done"
 
 
 
