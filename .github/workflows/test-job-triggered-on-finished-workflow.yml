@@ -1,0 +1,17 @@
+name: Test On Workflow Fininshed
+
+on:
+  workflow_run:
+    workflows: [ "Test PR Workflow" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Testing"
+          sleep 10
+          echo "Testing done"
+
+
+
