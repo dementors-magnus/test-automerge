@@ -26,10 +26,12 @@ jobs:
     needs: [test]
     if: ${{ github.event_name == 'pull_request' }}
     steps:
+      - run: echo "Hello"
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Automatically merge pull request
         run: gh pr merge -s
