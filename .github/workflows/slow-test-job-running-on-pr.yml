@@ -17,7 +17,7 @@ jobs:
     steps:
       - run: |
           echo "Testing"
-          sleep 20
+          sleep 200
           echo "Testing done"
 
   merge-pull-request:
@@ -31,6 +31,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Make sure all other checks are completed
+        run: gh pr checks
 
       - name: Automatically merge pull request
         run: gh pr merge -s
