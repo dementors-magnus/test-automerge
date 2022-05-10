@@ -36,13 +36,14 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - run: |
-          VERSION=${{ needs.test.build-plugin.version }}
+          VERSION=${{ needs.build-plugin.outputs.version }}
           SANITIZED_VERSION=${VERSION//./-}
           echo '$SANITIZED_VERSION' $SANITIZED_VERSION
+          git config --global user.email "vmswebclient@axis.com"
+          git config --global user.name "Dementors"
           git checkout -b vmswc/bump-embeddable-client-${SANITIZED_VERSION}
           echo embeddable-client-plugin-${{ needs.build-plugin.outputs.version }}.zip >> README.md
           git commit -m "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}"
-          git push --set-upstream origin vmswc/bump-embeddable-client-${SANITIZED_VERSION}
           gh pr create --title "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}" \
             --base main --head vmswc/bump-embeddable-client-${SANITIZED_VERSION} --body "Automatically updated version"
         env:
