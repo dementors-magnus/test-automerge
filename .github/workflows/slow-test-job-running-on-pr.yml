@@ -46,8 +46,9 @@ jobs:
           echo embeddable-client-plugin-${{ needs.build-plugin.outputs.version }}.zip >> README.md
           git add README.md
           git commit -m "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}"
+          git push ${{ GITHUB_SERVER_URL }}/${{ GITHUB_REPOSITORY }}.git
           gh pr create --title "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}" \
-            --base main --body "Automatically updated version"
+            --base main --head vmswc/bump-embeddable-client-${SANITIZED_VERSION} --body "Automatically updated version"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
