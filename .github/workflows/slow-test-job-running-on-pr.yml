@@ -34,8 +34,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
       - run: |
           VERSION=${{ needs.build-plugin.outputs.version }}
           SANITIZED_VERSION=${VERSION//./-}
