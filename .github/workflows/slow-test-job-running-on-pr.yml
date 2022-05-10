@@ -3,8 +3,6 @@ name: Slow Test PR Workflow
 on:
   push:
     branches: [main]
-    paths:
-      - trigger-pr-jobs/**
 
   pull_request:
     branches: [main]
@@ -17,8 +15,38 @@ jobs:
     steps:
       - run: |
           echo "Testing"
-          sleep 20
+          sleep 10
           echo "Testing done"
+
+  build-plugin:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set-version.outputs.version }}
+    steps:
+      - name: Set version
+        run: echo "::set-output name=version::1.2.3.4"
+
+  bump-version-in-composition:
+    runs-on: ubuntu-latest
+    needs: [ build-plugin ]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+      - run: |
+          VERSION=${{ needs.test.build-plugin.version }}
+          SANITIZED_VERSION=${VERSION//./-}
+          echo '$SANITIZED_VERSION' $SANITIZED_VERSION
+          git checkout -b vmswc/bump-embeddable-client-${SANITIZED_VERSION}
+          echo embeddable-client-plugin-${{ needs.build-plugin.outputs.version }}.zip >> README.md
+          git commit -m "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}"
+          git push --set-upstream origin vmswc/bump-embeddable-client-${SANITIZED_VERSION}
+          gh pr create --title "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}" \
+            --base main --head vmswc/bump-embeddable-client-${SANITIZED_VERSION} --body "Automatically updated version"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   merge-pull-request:
     name: Merge pull request
