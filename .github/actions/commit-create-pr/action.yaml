@@ -1,0 +1,29 @@
+name: 'Commit and create pull request'
+description: 'Commit added files and create a pull request'
+inputs:
+  branch:
+    description: 'The name of the branch the commit should be pushed to. '
+    required: true
+  title:
+    description: 'Title of pull request and message of commit'
+    required: true
+  body:
+    description: 'Body of pull request'
+    required: false
+    default:
+  github-token:
+    description: 'GitHub Personal Access Token (normally ${{ secrets.GITHUB_TOKEN }})'
+runs:
+  using: "composite"
+  steps:
+    - name: Generate licenses
+      shell: bash
+      run: |
+        git checkout -b ${{ inputs.branch }}
+        git config --global user.email "vmswebclient@axis.com"
+        git config --global user.name "Dementors"
+        git commit -m ${{ inputs.title }}
+        git push --set-upstream origin ${{ inputs.branch }}
+        gh pr create --title ${{ inputs.title }} --base main --head ${{ inputs.branch }} --body ${{ inputs.body }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}

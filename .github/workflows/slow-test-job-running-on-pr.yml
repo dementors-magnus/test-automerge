@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Set version
         id: set-version
-        run: echo "::set-output name=version::1.2.3.4"
+        run: echo "::set-output name=version::1.2.3.${{ env.GITHUB_RUN_ID }}"
 
   bump-version-in-composition:
     runs-on: ubuntu-latest
@@ -35,20 +35,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - run: |
-          VERSION=${{ needs.build-plugin.outputs.version }}
-          SANITIZED_VERSION=${VERSION//./-}
-          BRANCH=vmswc/bump-embeddable-client-${SANITIZED_VERSION}
-          git config --global user.email "vmswebclient@axis.com"
-          git config --global user.name "Dementors"
-          git checkout -b ${BRANCH}
           echo embeddable-client-plugin-${{ needs.build-plugin.outputs.version }}.zip >> README.md
           git add README.md
-          git commit -m "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}"
-          git push --set-upstream origin ${BRANCH}
-          gh pr create --title "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}" \
-            --base main --head ${BRANCH} --body "Automatically updated version"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and create PR
+        uses: ./.github/actions/commit-create-pr
+        with:
+          title: "LKPVW chore: update embeddable client in system composition to ${{ needs.build-plugin.outputs.version }}"
+          branch: vmswc/bump-embeddable-client-${{ needs.build-plugin.outputs.version }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   merge-pull-request:
     name: Merge pull request
