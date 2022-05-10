@@ -19,11 +19,11 @@ runs:
     - name: Generate licenses
       shell: bash
       run: |
-        git checkout -b ${{ inputs.branch }}
+        git checkout -b '${{ inputs.branch }}'
         git config --global user.email "vmswebclient@axis.com"
         git config --global user.name "Dementors"
-        git commit -m ${{ inputs.title }}
+        git commit -m '${{ inputs.title }}'
         git push --set-upstream origin ${{ inputs.branch }}
-        gh pr create --title ${{ inputs.title }} --base main --head ${{ inputs.branch }} --body ${{ inputs.body }}
+        gh pr create --title '${{ inputs.title }}' --base main --head '${{ inputs.branch }}' --body '${{ inputs.body }}'
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
